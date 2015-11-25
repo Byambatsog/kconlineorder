@@ -8,12 +8,14 @@
 
     if(isset($_POST['id'])){
         $ids = $_POST['id'];
+
         try {
 
             for($count = 0 ; $count < count($ids) ; $count++){
                 $itemID = $ids[$count];
                 delete_item($itemID);
             }
+
         } catch (Exception $e) {
             $error_notification = $e->getMessage();
         }

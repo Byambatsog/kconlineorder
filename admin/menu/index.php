@@ -111,10 +111,10 @@
             sodon_common.ajax('get','#edit-target','item_create.php','itemID='+id,'');
         },
         delete: function(){
-            if($("input[name=id]:checked").val() !== undefined){
+            if($("input[id=id]:checked").val() !== undefined){
                 smoke.confirm('Do you really want to delete?',function(e){
                     if (e){
-                        sodon_common.ajax('post','#alert-notification','item_delete.php',$("#listForm").serialize(),'sodon_main.refresh();');
+                        sodon_common.ajax('post','#alert-notification','item_delete.php',$("#listForm").serialize(),'sodon_list.refresh();');
                     }
                 }, {ok:"Delete", cancel:"Cancel"});
             }

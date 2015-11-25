@@ -116,7 +116,7 @@
             <?php else : ?>
                 <?php foreach ($items as $item) : ?>
                     <tr>
-                        <td><input type="checkbox" value="<?php echo $item['itemID']; ?>" name="id"/></td>
+                        <td><input type="checkbox" value="<?php echo $item['itemID']; ?>" name="id[]" id="id"/></td>
                         <td class="text-center"><?php echo $item['itemID']; ?></td>
                         <td>
                             <img src="<?php echo $item['picture']; ?>" style="width: 100px; height: 60px;"/>
