@@ -1,0 +1,25 @@
+body{overflow-y: scroll; overflow-x: auto;}
+.sodon-table-middle > tbody > tr > td{vertical-align: middle;}
+
+.sodon-sortable li {
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    margin: 0 3px 3px;
+    padding: 8px;
+    line-height: 1.428571429;
+    cursor: move;
+
+}
+
+.sodon-sortable li.ui-sortable-placeholder {
+    visibility: hidden;
+    border: 1px dashed #ddd;
+    background: none;
+}
+
+.btSep{margin-bottom: 10px;}
+
+form .row, #simpleForm .row, #advancedForm .row, .modal-body .row {margin-top: 0 !important;}
+.strong {font-weight: bold;}
+.form-control[readonly]{cursor: default;}
+.pagination{margin-top: 0;}
