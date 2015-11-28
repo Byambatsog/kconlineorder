@@ -35,7 +35,6 @@
             $item['ranking'] = $_POST['ranking'];
             if(isset($_POST['status'])) $item['status'] = 'E';
             else $item['status'] = 'D';
-            $item['ranking'] = $_POST['ranking'];
 
             if(empty($item['name'])) {
                 $error_name = 'Name must be filled out';
