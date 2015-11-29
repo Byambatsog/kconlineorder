@@ -1,9 +1,38 @@
 <?php
 function get_categories() {
     global $db;
-    $query = 'SELECT categoryID, name, picture, ranking, status FROM menucategories ORDER BY ranking ASC';
+    $query = 'SELECT categoryID, name, picture, ranking, status FROM menucategories WHERE status="E" ORDER BY ranking ASC';
     try {
         $statement = $db->prepare($query);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        $error_message = $e->getMessage();
+        display_db_error($error_message);
+    }
+}
+
+function get_categories_by_filters($status) {
+    global $db;
+
+    $counter = 0;
+    $where = '';
+    $params = array();
+    $conn = ' WHERE ';
+
+    if(!empty($status)){
+        $where = $where.$conn."status=?";
+        $params[$counter++] = $status;
+    }
+
+    $query = 'SELECT categoryID, name, picture, ranking, status FROM menucategories '.$where.' ORDER BY ranking ASC';
+    try {
+        $statement = $db->prepare($query);
+        for ($count = 1; $count <= $counter; ++$count){
+            $statement->bindValue($count, $params[$count-1]);
+        }
         $statement->execute();
         $result = $statement->fetchAll();
         $statement->closeCursor();

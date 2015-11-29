@@ -167,10 +167,9 @@
                             <li class="dropdown">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">System <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="${pageContext.request.contextPath}/config">Config</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/user">Gift cards</a></li>
+                                    <li><a href="<?php echo $app_path.'admin/system/giftcard/index.php';?>">Gift cards</a></li>
                                     <li><a href="<?php echo $app_path.'admin/system/cardtype/index.php';?>">Card types</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/user">Locations</a></li>
+                                    <li><a href="<?php echo $app_path.'admin/system/location/index.php';?>">Locations</a></li>
                                 </ul>
                             </li>
                         </ul>

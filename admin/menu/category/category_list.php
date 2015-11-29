@@ -4,7 +4,11 @@
     require_once('../../../model/database.php');
     require_once('../../../model/menu_category_db.php');
 
-    $categories = get_categories();
+    $status = '';
+
+    if(isset($_POST['status'])) $status = $_POST['status'];
+
+    $categories = get_categories_by_filters($status);
 ?>
 
 <?php if (count($categories) != 0) { ?>
