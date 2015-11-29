@@ -150,8 +150,8 @@
                             <li class="dropdown">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">Users <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="${pageContext.request.contextPath}/user">Employees</a></li>
-                                    <li><a href="${pageContext.request.contextPath}/config">Customers</a></li>
+                                    <li><a href="<?php echo $app_path.'admin/user/employee/index.php';?>">Employees</a></li>
+                                    <li><a href="<?php echo $app_path.'admin/user/customer/index.php';?>">Customers</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">

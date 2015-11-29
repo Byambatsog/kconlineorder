@@ -15,7 +15,7 @@
                     if(($page+3)*$pageSize > $total){
                         $end = $total%$pageSize==0?$total/$pageSize:$total/$pageSize+1;
                     } else {
-                        $end = $pageSize + 3;
+                        $end = $page + 3;
                     }
 
                     for($i = $start; $i <= $end; $i++){
