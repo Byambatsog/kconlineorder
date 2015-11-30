@@ -143,36 +143,43 @@
                 <div class="navbar-inner">
                     <div class="container">
                         <a class="brand pull-left" href="">King's crown</a>
-                        <ul class="nav navbar-nav" id="mobile-nav">
-                            <li class="dropdown">
-                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">Orders </a>
-                            </li>
-                            <li class="dropdown">
-                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">Users <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="<?php echo $app_path.'admin/user/employee/index.php';?>">Employees</a></li>
-                                    <li><a href="<?php echo $app_path.'admin/user/customer/index.php';?>">Customers</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">Menu <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="<?php echo $app_path.'admin/menu/index.php';?>">Menu items</a></li>
-                                    <li><a href="<?php echo $app_path.'admin/menu/category/index.php';?>">Menu item categories</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">Reports</a>
-                            </li>
-                            <li class="dropdown">
-                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">System <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="<?php echo $app_path.'admin/system/giftcard/index.php';?>">Gift cards</a></li>
-                                    <li><a href="<?php echo $app_path.'admin/system/cardtype/index.php';?>">Card types</a></li>
-                                    <li><a href="<?php echo $app_path.'admin/system/location/index.php';?>">Locations</a></li>
-                                </ul>
-                            </li>
-                        </ul>
+                        <?php
+
+                            if(isset($_SESSION['employeeTitle'])&&($_SESSION['employeeTitle']=='Manager'||$_SESSION['employeeTitle']=='Executive')) {
+
+                        ?>
+
+                            <ul class="nav navbar-nav" id="mobile-nav">
+                                <li class="dropdown">
+                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Orders </a>
+                                </li>
+                                <li class="dropdown">
+                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Users <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="<?php echo $app_path.'admin/user/employee/index.php';?>">Employees</a></li>
+                                        <li><a href="<?php echo $app_path.'admin/user/customer/index.php';?>">Customers</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Menu <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="<?php echo $app_path.'admin/menu/index.php';?>">Menu items</a></li>
+                                        <li><a href="<?php echo $app_path.'admin/menu/category/index.php';?>">Menu item categories</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Reports</a>
+                                </li>
+                                <li class="dropdown">
+                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">System <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="<?php echo $app_path.'admin/system/giftcard/index.php';?>">Gift cards</a></li>
+                                        <li><a href="<?php echo $app_path.'admin/system/cardtype/index.php';?>">Card types</a></li>
+                                        <li><a href="<?php echo $app_path.'admin/system/location/index.php';?>">Locations</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        <?php } ?>
                         <ul class="nav navbar-nav user_menu pull-right">
                             <li class="divider-vertical hidden-sm hidden-xs"></li>
                             <li class="dropdown">
@@ -181,9 +188,9 @@
                                     <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="">Change password</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="">Log out</a></li>
+<!--                                    <li><a href="">Change password</a></li>-->
+<!--                                    <li class="divider"></li>-->
+                                    <li><a href="<?php echo $app_path.'admin/logout.php';?>">Log out</a></li>
                                 </ul>
                             </li>
                         </ul>

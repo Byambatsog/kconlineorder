@@ -81,7 +81,7 @@
             }
 
             if(empty($location['phone'])) {
-                $error_phone = 'Phone must be selected';
+                $error_phone = 'Phone must be filled out';
                 $formValidation = false;
             } if(!preg_match("/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/", $location['phone'])) {
                 $error_phone = 'Phone must be valid phone number';

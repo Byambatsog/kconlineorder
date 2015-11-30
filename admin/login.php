@@ -1,6 +1,7 @@
 <?php
 require_once('../util/main.php');
 require_once('../model/database.php');
+require_once('../model/employee_db.php');
 
 $error_message = '';
 
@@ -8,7 +9,7 @@ if (!empty($_POST['username'])&&!empty($_POST['password']))
 {
     try
     {
-        $sql = 'SELECT userID,userName, password FROM users WHERE userName = :uname LIMIT 1';
+        $sql = 'SELECT userID, userName, status, eFlag, password FROM users WHERE userName = :uname LIMIT 1';
         $prestmt = $db->prepare($sql);
         $prestmt->bindValue(':uname', $_POST['username']);
         $prestmt->execute();
@@ -17,10 +18,13 @@ if (!empty($_POST['username'])&&!empty($_POST['password']))
         $userlogin = $_POST['username'];
         $userpwd = $_POST['password'];
 
-        if (password_verify($userpwd,$user['password'])){
+        if (password_verify($userpwd,$user['password'])&&$user['status']=='E'&&$user['eFlag']=='1'){
+            $employee = get_employee($user['userID']);
             session_start();
             $_SESSION['userId'] = $user['userID'];
             $_SESSION['userName'] = $user['userName'];
+            $_SESSION['employeeTitle'] = $employee['title'];
+
             header("Location: index.php");
         } else {
             $error_message = 'Your username or password was incorrect';

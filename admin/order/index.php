@@ -7,7 +7,7 @@ require_once('../../view/headerForAdmin.php');
 <div class="heading">
     <div class="clearfix">
         <div class="pull-left">
-            <h3>Current Online Order</h3>
+            <h3>Current Orders</h3>
         </div>
     </div>
 </div>
