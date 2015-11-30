@@ -151,7 +151,7 @@
 
                             <ul class="nav navbar-nav" id="mobile-nav">
                                 <li class="dropdown">
-                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Orders </a>
+                                    <a data-toggle="dropdown" class="dropdown-toggle" href="<?php echo $app_path.'admin/order/index.php';?>">Orders </a>
                                 </li>
                                 <li class="dropdown">
                                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">Users <b class="caret"></b></a>
@@ -168,7 +168,15 @@
                                     </ul>
                                 </li>
                                 <li class="dropdown">
-                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Reports</a>
+                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">Reports <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="<?php echo $app_path.'admin/report/dailySalesReport.php';?>">Daily Sales Report</a></li>
+                                        <li><a href="<?php echo $app_path.'admin/report/bestByCustomer.php';?>">Best By Customer</a></li>
+                                        <li><a href="<?php echo $app_path.'admin/report/bestByFrontDesk.php';?>">Best By Front Desk</a></li>
+                                        <li><a href="<?php echo $app_path.'admin/report/bestCustomers.php';?>">Best Customers</a></li>
+
+<!--                                        <li><a href="--><?php //echo $app_path.'admin/menu/category/index.php';?><!--">Menu item categories</a></li>-->
+                                    </ul>
                                 </li>
                                 <li class="dropdown">
                                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">System <b class="caret"></b></a>
