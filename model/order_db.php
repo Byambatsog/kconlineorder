@@ -1,37 +1,153 @@
 <?php
-function get_products_by_category($category_id) {
+
+function get_orderSize_by_filters($locationID, $date, $status, $pickupType, $customer, $street, $zipCode) {
     global $db;
-    $query = 'SELECT * FROM products
-              WHERE categoryID = :category_id
-              ORDER BY productID';
+
+    $counter = 0;
+    $where = '';
+    $params = array();
+    $conn = ' WHERE ';
+
+    if(!empty($locationID)){
+        $where = $where.$conn."orders.locationID=?";
+        $conn = " AND ";
+        $params[$counter++] = $locationID;
+    }
+
+    if(!empty($date)){
+        $where = $where.$conn."cast(orderDateTime as date)=?";
+        $conn = " AND ";
+        $params[$counter++] = $date;
+    }
+
+    if(!empty($pickupType)){
+        $where = $where.$conn."pickupType=?";
+        $conn = " AND ";
+        $params[$counter++] = $pickupType;
+    }
+
+    if(!empty($street)){
+        $where = $where.$conn."orders.shippingStreet like ?";
+        $conn = " AND ";
+        $params[$counter++] = '%'.$street.'%';
+    }
+
+    if(!empty($zipCode)){
+        $where = $where.$conn."orders.shippingZipCode=?";
+        $conn = " AND ";
+        $params[$counter++] = $zipCode;
+    }
+
+    if(!empty($customer)){
+        $where = $where.$conn."users.firstName like ?";
+        $conn = " AND ";
+        $params[$counter++] = '%'.$customer.'%';
+    }
+
+    if(!empty($status)){
+        $where = $where.$conn."orders.status=?";
+        $params[$counter++] = $status;
+    }
+
+    $query = 'SELECT count(*) FROM orders
+              LEFT JOIN users ON orders.customerID=users.userID
+              LEFT JOIN customers ON orders.customerID=customers.customerID
+              LEFT JOIN
+                  (SELECT orderID, SUM(unitprice*quantity) AS totalPayment, SUM(quantity) AS totalQuantity
+	               FROM orderlines GROUP BY orderID) AS orderline ON orders.orderID=orderline.orderID'
+            .$where;
+
     try {
         $statement = $db->prepare($query);
-        $statement->bindValue(':category_id', $category_id);
+
+        for ($count = 1; $count <= $counter; ++$count){
+            $statement->bindValue($count, $params[$count-1]);
+        }
         $statement->execute();
-        $result = $statement->fetchAll();
+        $row = $statement->fetch();
         $statement->closeCursor();
-        return $result;
+        return $row[0];
     } catch (PDOException $e) {
         $error_message = $e->getMessage();
         display_db_error($error_message);
     }
 }
 
-function get_orders() {
+function get_orders_by_filters($locationID, $date, $status, $pickupType, $customer, $street, $zipCode, $page, $pageSize, $orderField, $orderDirection) {
+    //P - Pending
+    //S - Processing
+    //R - Ready
+    //C - Completed
+
     global $db;
-    $query = 'SELECT orders.orderID, CONCAT(firstName,\' \', lastName) AS customerName, totalPayment, totalQuantity,
+
+    $orderBy = ' ORDER BY orders.orderDateTime DESC ';
+    if(!empty($orderField)&&!empty($orderDirection))
+        $orderBy = ' ORDER BY '.$orderField.' '.$orderDirection.' ';
+
+    $counter = 0;
+    $where = '';
+    $params = array();
+    $conn = ' WHERE ';
+
+    if(!empty($locationID)){
+        $where = $where.$conn."orders.locationID=?";
+        $conn = " AND ";
+        $params[$counter++] = $locationID;
+    }
+
+    if(!empty($date)){
+        $where = $where.$conn."cast(orderDateTime as date)=?";
+        $conn = " AND ";
+        $params[$counter++] = $date;
+    }
+
+    if(!empty($pickupType)){
+        $where = $where.$conn."pickupType=?";
+        $conn = " AND ";
+        $params[$counter++] = $pickupType;
+    }
+
+    if(!empty($street)){
+        $where = $where.$conn."orders.shippingStreet like ?";
+        $conn = " AND ";
+        $params[$counter++] = '%'.$street.'%';
+    }
+
+    if(!empty($zipCode)){
+        $where = $where.$conn."orders.shippingZipCode=?";
+        $conn = " AND ";
+        $params[$counter++] = $zipCode;
+    }
+
+    if(!empty($customer)){
+        $where = $where.$conn."users.firstName like ?";
+        $conn = " AND ";
+        $params[$counter++] = '%'.$customer.'%';
+    }
+
+    if(!empty($status)){
+        $where = $where.$conn."orders.status=?";
+        $params[$counter++] = $status;
+    }
+
+    $query = 'SELECT orders.orderID, CONCAT(firstName,\' \', lastName) AS customerName, totalPayment, totalQuantity, orders.status,
               orderDateTime, pickupType, phone, orders.shippingStreet AS shippingAddress, billingStreet AS billingAddress
               FROM orders
               LEFT JOIN users ON orders.customerID=users.userID
               LEFT JOIN customers ON orders.customerID=customers.customerID
               LEFT JOIN
                   (SELECT orderID, SUM(unitprice*quantity) AS totalPayment, SUM(quantity) AS totalQuantity
-	               FROM orderlines GROUP BY orderID) AS orderline ON orders.orderID=orderline.orderID
-              WHERE locationID=1 AND pickupType=\'D\'
-              ORDER BY orderDateTime DESC
-              LIMIT 0, 10';
+	               FROM orderlines GROUP BY orderID) AS orderline ON orders.orderID=orderline.orderID'
+            .$where
+            .$orderBy.'LIMIT '.($pageSize*($page-1)).', '.$pageSize;
+
     try {
         $statement = $db->prepare($query);
+
+        for ($count = 1; $count <= $counter; ++$count){
+            $statement->bindValue($count, $params[$count-1]);
+        }
         $statement->execute();
         $result = $statement->fetchAll();
         $statement->closeCursor();
@@ -42,14 +158,20 @@ function get_orders() {
     }
 }
 
-function get_product($product_id) {
+function get_order($order_id) {
     global $db;
-    $query = 'SELECT *
-              FROM products
-              WHERE productID = :product_id';
+    $query =   'SELECT orders.orderID, locations.name AS locationName, orderDateTime, pickupType,
+                fulfillmentDateTime, orderComment, orders.shippingStreet, orders.shippingCity,
+                orders.shippingState, orders.shippingZipCode, orders.status, CONCAT(firstName,\' \', lastName) AS customerName,
+                users.phone, billingStreet, billingCity, billingState, billingZipCode
+                FROM orders
+                LEFT JOIN users ON orders.customerID=users.userID
+                LEFT JOIN locations ON orders.locationID=locations.locationID
+                LEFT JOIN customers ON orders.customerID=customers.customerID
+                WHERE orderID = :order_id';
     try {
         $statement = $db->prepare($query);
-        $statement->bindValue(':product_id', $product_id);
+        $statement->bindValue(':order_id',$order_id);
         $statement->execute();
         $result = $statement->fetch();
         $statement->closeCursor();
@@ -60,76 +182,110 @@ function get_product($product_id) {
     }
 }
 
-function add_product($category_id, $code, $name, $description,
-                     $price, $discount_percent) {
+function get_orderlines($order_id) {
     global $db;
-    $query = 'INSERT INTO products
-                 (categoryID, productCode, productName, description,
-                  listPrice, discountPercent, dateAdded)
-              VALUES
-                 (:category_id, :code, :name, :description, :price,
-                  :discount_percent, NOW())';
+    $query =   'SELECT orderLineID, items.itemID, unitPrice, quantity, unitPrice*Quantity AS totalPrice, status, name, picture, category, calories
+                FROM orderlines JOIN
+                        (SELECT itemID, menuitems.name, menuitems.picture, menucategories.name as category, calories
+                        FROM menuitems JOIN menucategories USING(categoryID)) AS items
+                        ON orderlines.itemID=items.itemID
+                WHERE orderID = :order_id
+                ORDER BY itemID;';
     try {
         $statement = $db->prepare($query);
-        $statement->bindValue(':category_id', $category_id);
-        $statement->bindValue(':code', $code);
-        $statement->bindValue(':name', $name);
-        $statement->bindValue(':description', $description);
-        $statement->bindValue(':price', $price);
-        $statement->bindValue(':discount_percent', $discount_percent);
+        $statement->bindValue(':order_id',$order_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        $error_message = $e->getMessage();
+        display_db_error($error_message);
+    }
+}
+
+function change_orderLine_status($orderLineId) {
+    global $db;
+    $query = 'UPDATE orderlines SET status= not status WHERE orderLineID = :orderLineId';
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':orderLineId', $orderLineId);
+        $row_count = $statement->execute();
+        $statement->closeCursor();
+        return $row_count;
+    } catch (PDOException $e) {
+        $error_message = $e->getMessage();
+        display_db_error($error_message);
+    }
+}
+
+function delete_order($orderID) {
+    global $db;
+    $query = 'DELETE FROM orders WHERE orderID = :order_id';
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':order_id', $orderID);
+        $row_count = $statement->execute();
+        $statement->closeCursor();
+        return $row_count;
+    } catch (PDOException $e) {
+        $error_message = $e->getMessage();
+        display_db_error($error_message);
+    }
+}
+
+function add_order($order, $orderLines) {
+    global $db;
+
+    try {
+        $db->beginTransaction();
+
+        $orderQuery = 'INSERT INTO orders
+                 (customerID, locationID, orderDateTime, pickupType, fulfillmentDateTime, orderComment,
+                 shippingStreet, shippingCity, shippingState, shippingZipCode, status, created)
+              VALUES
+                 (:customerID, :locationID, sysdate(), :pickupType, sysdate(), :orderComment,
+                  :shippingStreet, :shippingCity, :shippingState, :shippingZipCode, :status, sysdate())';
+
+        $statement = $db->prepare($orderQuery);
+        $statement->bindValue(':customerID', $order['customerID']);
+        $statement->bindValue(':locationID', $order['locationID']);
+        $statement->bindValue(':pickupType', $order['pickupType']);
+        $statement->bindValue(':orderComment', $order['orderComment']);
+        $statement->bindValue(':shippingStreet', $order['shippingStreet']);
+        $statement->bindValue(':shippingCity', $order['shippingCity']);
+        $statement->bindValue(':shippingState', $order['shippingState']);
+        $statement->bindValue(':shippingZipCode', $order['shippingZipCode']);
+        $statement->bindValue(':status', 'P');
         $statement->execute();
         $statement->closeCursor();
+        $orderID = $db->lastInsertId();
 
-        // Get the last product ID that was automatically generated
-        $product_id = $db->lastInsertId();
-        return $product_id;
-    } catch (PDOException $e) {
+        $orderLineQuery = 'INSERT INTO orderlines
+                 (orderID, itemID, unitPrice, quantity, status)
+              VALUES
+                 (:orderID, :itemID, :unitPrice, :quantity, 0)';
+
+
+        foreach($orderLines as $orderLine) :
+            $statement = $db->prepare($orderLineQuery);
+            $statement->bindValue(':orderID', $orderID);
+            $statement->bindValue(':itemID', $orderLine['itemID']);
+            $statement->bindValue(':unitPrice', $orderLine['unitPrice']);
+            $statement->bindValue(':quantity', $orderLine['quantity']);
+            $statement->execute();
+            $statement->closeCursor();
+        endforeach;
+
+        // commit the transaction
+        $db->commit();
+
+    } catch (Exception $e) {
         $error_message = $e->getMessage();
+        $db->rollBack();
         display_db_error($error_message);
     }
+
 }
 
-function update_product($product_id, $code, $name, $description,
-                        $price, $discount_percent, $category_id) {
-    global $db;
-    $query = 'UPDATE Products
-              SET productName = :name,
-                  productCode = :code,
-                  description = :description,
-                  listPrice = :price,
-                  discountPercent = :discount_percent,
-                  categoryID = :category_id
-              WHERE productID = :product_id';
-    try {
-        $statement = $db->prepare($query);
-        $statement->bindValue(':name', $name);
-        $statement->bindValue(':code', $code);
-        $statement->bindValue(':description', $description);
-        $statement->bindValue(':price', $price);
-        $statement->bindValue(':discount_percent', $discount_percent);
-        $statement->bindValue(':category_id', $category_id);
-        $statement->bindValue(':product_id', $product_id);
-        $row_count = $statement->execute();
-        $statement->closeCursor();
-        return $row_count;
-    } catch (PDOException $e) {
-        $error_message = $e->getMessage();
-        display_db_error($error_message);
-    }
-}
-
-function delete_product($product_id) {
-    global $db;
-    $query = 'DELETE FROM products WHERE productID = :product_id';
-    try {
-        $statement = $db->prepare($query);
-        $statement->bindValue(':product_id', $product_id);
-        $row_count = $statement->execute();
-        $statement->closeCursor();
-        return $row_count;
-    } catch (PDOException $e) {
-        $error_message = $e->getMessage();
-        display_db_error($error_message);
-    }
-}
 ?>

@@ -1,7 +1,12 @@
 <?php
-require_once('../../util/main.php');
-require_once('../authenticate.php');
-require_once('../../view/headerForAdmin.php');
+    require_once('../../util/main.php');
+    require_once('../authenticate.php');
+    require_once('../../view/headerForAdmin.php');
+    require_once('../../model/database.php');
+    require_once('../../model/location_db.php');
+
+    $locations = get_locations();
+
 ?>
 
 <div class="heading">
@@ -23,67 +28,63 @@ require_once('../../view/headerForAdmin.php');
             </div>
             <div class="panel-body">
                 <div id="simple-search">
-                    <form id="simpleForm" role="form">
+                    <form id="searchForm" role="form">
+                        <div class="form-group">
+                            <label class="control-label" for="location">Location</label>
+                            <select name="locationID" id="searchLocationID" class="form-control input-sm">
+                                <?php foreach ($locations as $location) : ?>
+                                    <option value="<?php echo $location['locationID']; ?>"><?php echo $location['name']; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
                         <div class="row">
                             <div class="col-xs-6">
                                 <div class="form-group">
+                                    <label class="control-label" for="filterDate">Date</label>
+                                    <input readonly="readonly" id="searchDate" name="filterDate" class="form-control input-sm" value="2015-11-18"/>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
                                     <label class="control-label" for="simpleStatus">Status</label>
-                                    <select name="status" id="simpleStatus" class="form-control input-sm">
+                                    <select name="status" id="searchStatus" class="form-control input-sm">
+                                        <option value="">....</option>
                                         <option value="P">Pending</option>
+                                        <option value="S">Processing</option>
                                         <option value="R">Ready</option>
                                         <option value="C">Completed</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xs-6">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="pickupType">Pick up type</label>
+                            <select name="pickupType" id="searchPickupType" class="form-control input-sm">
+                                <option value="">....</option>
+                                <option value="P">Pick up</option>
+                                <option value="D">Delivery</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="customer">Customer</label>
+                            <input id="searchCustomer" name="customer" class="form-control input-sm"/>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-8">
                                 <div class="form-group">
-                                    <label class="control-label" for="simpleStatus">Lendable</label>
-                                    <select name="lendable" id="simpleLendable" class="form-control input-sm">
-                                        <option value="">...</option>
-                                        <option value="true">Yes</option>
-                                        <option value="false">No</option>
-                                    </select>
+                                    <label class="control-label" for="street">Shipping street</label>
+                                    <input id="searchStreet" name="street" class="form-control input-sm"/>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label class="control-label" for="zipCode">Zip code</label>
+                                        <input id="searchZipCode" name="zipCode" class="form-control input-sm"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label class="control-label" for="simpleTitle">Title</label>
-                            <input id="simpleTitle" name="title" class="form-control input-sm" />
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label" for="simpleTitleAlias">Title alias</label>
-                            <input id="simpleTitleAlias" name="titleAlias" class="form-control input-sm" />
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label" for="simplePublishedDateFrom">Published date</label>
-                            <div class="input-group input-group-sm">
-                                <input id="simplePublishedDateFrom" name="publishedDateFrom" readonly="readonly" class="form-control input-sm"  placeholder="From"/>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button" onclick="$('#simplePublishedDateFrom').val('');"><i class="glyphicon glyphicon-remove text-muted"></i></button>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group input-group-sm">
-                                <input id="simplePublishedDateTo" name="publishedDateTo" readonly="readonly" class="form-control"  placeholder="To"/>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button" onclick="$('#simplePublishedDateTo').val('');"><i class="glyphicon glyphicon-remove text-muted"></i></button>
-                                </span>
-                            </div>
-                        </div>
-
-<!--                        <div class="form-group">-->
-<!--                            <label class="control-label" for="simplePublishedCountry">Published country</label>-->
-<!--                            <select id="simplePublishedCountry" name="publishedCountryId" class="form-control input-sm">-->
-<!--                                <option value="">...</option>-->
-<!--                                <c:forEach var="country" items="${publishedCountries}">-->
-<!--                                    <option value="${country.id}">${country.name}</option>-->
-<!--                                </c:forEach>-->
-<!--                            </select>-->
-<!--                        </div>-->
 
                         <hr>
 
@@ -94,7 +95,7 @@ require_once('../../view/headerForAdmin.php');
 
                     </form>
                     <script>
-                        $('#simpleForm').on('submit', function(){
+                        $('#searchForm').on('submit', function(){
                             sodon_main.simpleSearch();
                             return false;
                         })
@@ -127,38 +128,17 @@ require_once('../../view/headerForAdmin.php');
 </div>
 
 <script type="text/javascript">
+
     $(document).ready(function(){
 
-        /*simple search*/
-        var spdf = $('#simplePublishedDateFrom').datepicker({
+        var sd = $('#searchDate').datepicker({
             format: 'yyyy-mm-dd',
             weekStart: 1
         }).on('changeDate', function(ev) {
-            spdf.hide();
+            sd.hide();
         }).data('datepicker');
 
-        var spdt = $('#simplePublishedDateTo').datepicker({
-            format: 'yyyy-mm-dd',
-            weekStart: 1
-        }).on('changeDate', function(ev) {
-            spdt.hide();
-        }).data('datepicker');
-
-        /*advanced search*/
-        var apdf = $('#advancedPublishedDateFrom').datepicker({
-            format: 'yyyy-mm-dd',
-            weekStart: 1
-        }).on('changeDate', function(ev) {
-            apdf.hide();
-        }).data('datepicker');
-
-        var apdt = $('#advancedPublishedDateTo').datepicker({
-            format: 'yyyy-mm-dd',
-            weekStart: 1
-        }).on('changeDate', function(ev) {
-            apdt.hide();
-        }).data('datepicker');
-
+        $("#searchZipCode").inputmask("99999");
 
     });
 
@@ -168,33 +148,36 @@ require_once('../../view/headerForAdmin.php');
             $('#searchParams').val('');
         },
         simpleSearch: function() {
-            sodon_common.ajax('post','#list-target','${pageContext.request.contextPath}/item/book/list',$("#simpleForm").serialize(),'');
-            $('#searchParams').val('&'+$("#simpleForm").serialize());
+            sodon_common.ajax('post','#list-target','order_list.php',$("#searchForm").serialize(),'');
+            $('#searchParams').val('&'+$("#searchForm").serialize());
         },
-        load: function(){
-            sodon_common.ajax('get','#item-load','${pageContext.request.contextPath}/item/book/load?barcode='+$('#itemBarcode').val(),'','$("#itemBarcode").val("")');
-        },
-        create: function(id){
+        detail: function(id){
             $('#edit-target').html('');
             $('#createModal').modal({
                 backdrop: false
             });
-            sodon_common.ajax('get','#edit-target','${pageContext.request.contextPath}/item/book/create','id='+id,'');
+            sodon_common.ajax('get','#edit-target','order_detail.php','orderID='+id,'');
+        },
+        changeStatus: function(id){
+            sodon_common.ajax('post','#alert-notification','order_status.php','id=' + id,'sodon_list.refresh();');
         },
         delete: function(){
-            if($("input[name=id]:checked").val() !== undefined){
+            if($("input[id=id]:checked").val() !== undefined){
                 smoke.confirm('Do you really want to delete?',function(e){
                     if (e){
-                        sodon_common.ajax('post','#alert-notification','${pageContext.request.contextPath}/item/delete',$("#listForm").serialize(),'sodon_main.list();');
+                        sodon_common.ajax('post','#alert-notification','order_delete.php',$("#listForm").serialize(),'sodon_list.refresh();');
                     }
                 }, {ok:"Delete", cancel:"Cancel"});
             }
             else{
                 $.sticky("Please select the items to delete!", {autoclose : 5000, position: "top-right", type: "st-info" });
             }
+        },
+        create: function(){
+            sodon_common.ajax('post','#alert-notification','order_create.php','','sodon_list.refresh();');
         }
     };
-    sodon_main.list();
+    sodon_main.simpleSearch();
 </script>
 
 
