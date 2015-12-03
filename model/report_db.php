@@ -19,7 +19,8 @@ function get_best_by_customer($startDate, $endDate) {
         $params[$counter++] = $endDate.' 23:59:59';
     }
 
-    $query =   'SELECT CustomerTotal.itemID, menuitems.name AS itemName, menucategories.name as category, customerTotal.customerID, users.firstName, users.lastName, users.phone, totOrder
+    $query =   'SELECT CustomerTotal.itemID, menuitems.name AS itemName, menucategories.name as category,
+                customerTotal.customerID, users.firstName, users.lastName, users.phone, totOrder
                 FROM
                     (SELECT itemID, SUM(quantity) AS totOrder, customerID
                      FROM orderlines JOIN (SELECT * FROM orders'.$where.') as orders USING(orderID)
@@ -71,7 +72,8 @@ function get_best_by_frontDesk($startDate, $endDate) {
         $params[$counter++] = $endDate.' 23:59:59';
     }
 
-    $query =   'SELECT employeeTotal.referby as employeeID, users.firstName, users.lastName, locations.name AS locationName, menuitems.name AS itemName, menucategories.name as category, itemID, totalOrder
+    $query =   'SELECT employeeTotal.referby as employeeID, users.firstName, users.lastName, locations.name AS locationName,
+                menuitems.name AS itemName, menucategories.name as category, itemID, totalOrder
                 FROM
                     (SELECT referBy, itemID, SUM(quantity) as totalOrder
                      FROM (SELECT * FROM orders'.$where.') as orders JOIN orderlines USING(orderID)
@@ -108,9 +110,7 @@ function get_best_by_frontDesk($startDate, $endDate) {
 
 function get_bestCustomer($startDate, $endDate, $pageSize) {
     global $db;
-
     $pageLimit = 10;
-
     $counter = 0;
     $where = '';
     $params = array();
@@ -132,7 +132,8 @@ function get_bestCustomer($startDate, $endDate, $pageSize) {
     }
 
     $query =   'SELECT customerID, firstName, lastName, users.phone, customers.shippingStreet, customers.shippingCity,
-                customers.shippingState, customers.shippingZipCode, SUM(totalOrder) as customerTotalOrder, locations.name as locationName
+                customers.shippingState, customers.shippingZipCode, SUM(totalOrder) as customerTotalOrder,
+                locations.name as locationName
                 FROM orders JOIN
                     (SELECT orderID, SUM(unitprice*quantity) AS totalOrder
                      FROM orderlines GROUP BY orderID) AS totOrder
@@ -180,7 +181,8 @@ function get_DailySalesReport($date, $location) {
         $params[$counter++] = $location;
     }
 
-    $query =   'SELECT itemID, menuitems.name as itemName, menucategories.name AS category, SUM(quantity) AS totalQuantity, menuitems.unitPrice, SUM(orderlines.unitprice*orderlines.quantity) totalPrice
+    $query =   'SELECT itemID, menuitems.name as itemName, menucategories.name AS category, SUM(quantity) AS totalQuantity,
+                menuitems.unitPrice, SUM(orderlines.unitprice*orderlines.quantity) totalPrice
                 FROM orderlines
                 JOIN menuitems USING(itemID)
                 JOIN menucategories ON menuitems.categoryID=menucategories.categoryID

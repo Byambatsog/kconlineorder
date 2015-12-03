@@ -236,10 +236,8 @@ function delete_order($orderID) {
 
 function add_order($order, $orderLines) {
     global $db;
-
     try {
         $db->beginTransaction();
-
         $orderQuery = 'INSERT INTO orders
                  (customerID, locationID, orderDateTime, pickupType, fulfillmentDateTime, orderComment,
                  shippingStreet, shippingCity, shippingState, shippingZipCode, status, created)
@@ -262,10 +260,7 @@ function add_order($order, $orderLines) {
         $orderID = $db->lastInsertId();
 
         $orderLineQuery = 'INSERT INTO orderlines
-                 (orderID, itemID, unitPrice, quantity, status)
-              VALUES
-                 (:orderID, :itemID, :unitPrice, :quantity, 0)';
-
+                 (orderID, itemID, unitPrice, quantity, status) VALUES (:orderID, :itemID, :unitPrice, :quantity, 0)';
 
         foreach($orderLines as $orderLine) :
             $statement = $db->prepare($orderLineQuery);
@@ -276,8 +271,6 @@ function add_order($order, $orderLines) {
             $statement->execute();
             $statement->closeCursor();
         endforeach;
-
-        // commit the transaction
         $db->commit();
         return $orderID;
     } catch (Exception $e) {

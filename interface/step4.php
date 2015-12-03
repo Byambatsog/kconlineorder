@@ -51,6 +51,75 @@
 
     if(isset($_POST['placeOrder'])){
 
+        $formValidation = true;
+
+        if(empty($_POST['cardTypeID'])) {
+            $error_cardTypeID = 'Card type must be selected';
+            $formValidation = false;
+        }
+
+        if(empty($_POST['cardNumber'])) {
+            $error_cardNumber = 'Card number must be filled out';
+            $formValidation = false;
+        } if(!preg_match("/^[0-9]{16}$/", $_POST['cardNumber'])) {
+            $error_cardNumber = 'Card number must be valid';
+            $formValidation = false;
+        }
+
+        if(empty($_POST['securityCode'])) {
+            $error_cardSecurityCode = 'Security code must be filled out';
+            $formValidation = false;
+        } else if(!preg_match("/^[0-9]{3}$/", $_POST['securityCode'])) {
+            $error_cardSecurityCode = 'Security code must be valid';
+            $formValidation = false;
+        }
+
+        if(empty($_POST['billingStreet'])) {
+            $error_billingStreet = 'Billing address must be filled out';
+            $formValidation = false;
+        }
+
+        if(empty($_POST['billingCity'])) {
+            $error_billingCity = 'Billing city must be filled out';
+            $formValidation = false;
+        }
+
+        if(empty($_POST['billingState'])) {
+            $error_billingState = 'Billing state must be selected';
+            $formValidation = false;
+        }
+
+        if(empty($_POST['billingZipCode'])) {
+            $error_billingZipCode = 'Billing zip code must be filled out';
+            $formValidation = false;
+        } else if(!preg_match("/^[0-9]{5}$/", $_POST['billingZipCode'])) {
+            $error_billingZipCode = 'Billing zip code must be valid';
+            $formValidation = false;
+        }
+
+        if(empty($_POST['shippingStreet'])) {
+            $error_shippingStreet = 'Shipping address must be filled out';
+            $formValidation = false;
+        }
+
+        if(empty($_POST['shippingCity'])) {
+            $error_shippingCity = 'Shipping city must be filled out';
+            $formValidation = false;
+        }
+
+        if(empty($_POST['shippingState'])) {
+            $error_shippingState = 'Shipping state must be selected';
+            $formValidation = false;
+        }
+
+        if(empty($_POST['shippingZipCode'])) {
+            $error_shippingZipCode = 'Shipping zip code must be filled out';
+            $formValidation = false;
+        }  else if(!preg_match("/^[0-9]{5}$/", $_POST['shippingZipCode'])) {
+            $error_shippingZipCode = 'Shipping zip code must be valid';
+            $formValidation = false;
+        }
+
         $order['customerID'] = $_SESSION['customer']['customerID'];
         $order['orderComment'] = '';
 
@@ -61,16 +130,17 @@
             $order['shippingZipCode'] = $_POST['shippingZipCode'];
         }
 
-        $orderID = add_order($order, $_SESSION['orderLines']);
-
-        $payment = array();
-        $payment['orderID'] = $orderID;
-        $payment['amount'] = $_SESSION['totalPrice'];
-        $payment['cardTypeID'] = $_POST['cardTypeID'];
-        $payment['cardNumber'] = $_POST['cardNumber'];
-        $payment['cardExpMonth'] = $_POST['cardExpMonth'];
-        $payment['cardExpYear'] = $_POST['cardExpYear'];
-        add_payment($payment);
+        if($formValidation){
+            $orderID = add_order($order, $_SESSION['orderLines']);
+            $payment = array();
+            $payment['orderID'] = $orderID;
+            $payment['amount'] = $_SESSION['totalPrice'];
+            $payment['cardTypeID'] = $_POST['cardTypeID'];
+            $payment['cardNumber'] = $_POST['cardNumber'];
+            $payment['cardExpMonth'] = $_POST['cardExpMonth'];
+            $payment['cardExpYear'] = $_POST['cardExpYear'];
+            add_payment($payment);
+        }
 
         $customer['billingStreet'] = $_POST['billingStreet'];
         $customer['billingCity'] = $_POST['billingCity'];
@@ -87,8 +157,10 @@
         $customer['cardExpMonth'] = $_POST['cardExpMonth'];
         $customer['cardExpYear'] = $_POST['cardExpYear'];
 
-        update_customer($customer);
-        header("Location:step5.php");
+        if($formValidation){
+            update_customer($customer);
+            header("Location:step5.php");
+        }
     }
 ?>
 
@@ -275,3 +347,15 @@
     </div>
 </div>
 <?php include 'footer.php'; ?>
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+
+        $("#cardNumber").inputmask("9999999999999999");
+        $("#securityCode").inputmask("999");
+        $("#billingZipCode").inputmask("99999");
+        $("#shippingZipCode").inputmask("99999");
+
+    });
+</script>
