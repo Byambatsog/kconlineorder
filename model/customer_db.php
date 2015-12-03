@@ -202,4 +202,104 @@ function change_status($customer_id, $status) {
     }
 }
 
+function add_customerUser($customer) {
+    global $db;
+
+    $userQuery = 'CALL user_add(:userName, :password, :firstName, :lastName, :emailAddress, :status, :eFlag, :cFlag, @userID)';
+
+    try {
+        $statement = $db->prepare($userQuery);
+        $statement->bindValue(':userName', $customer['userName']);
+        $statement->bindValue(':password', $customer['password']);
+        $statement->bindValue(':firstName', $customer['firstName']);
+        $statement->bindValue(':lastName', $customer['lastName']);
+        $statement->bindValue(':emailAddress', $customer['emailAddress']);
+        $statement->bindValue(':status', 'E');
+        $statement->bindValue(':eFlag', 0);
+        $statement->bindValue(':cFlag', 1);
+        $statement->execute();
+        $statement->closeCursor();
+        $return = $db->query("SELECT @userID AS userID")->fetch(PDO::FETCH_ASSOC);
+        $user_id = $return['userID'];
+        return $user_id;
+    } catch (PDOException $e) {
+        $error_message = $e->getMessage();
+        display_db_error($error_message);
+    }
+}
+
+function add_customer($customer) {
+    global $db;
+
+    $query = 'CALL customer_add(:customerID, :billingStreet, :billingCity, :billingState, :billingZipCode,
+                                :shippingStreet, :shippingCity, :shippingState, :shippingZipCode, :cardTypeID,
+                                :cardNumber, :cardExpMonth, :cardExpYear)';
+
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':customerID', $customer['customerID']);
+        $statement->bindValue(':billingStreet', $customer['billingStreet']);
+        $statement->bindValue(':billingCity', $customer['billingCity']);
+        $statement->bindValue(':billingState', $customer['billingState']);
+        $statement->bindValue(':billingZipCode', $customer['billingZipCode']);
+        $statement->bindValue(':shippingStreet', $customer['shippingStreet']);
+        $statement->bindValue(':shippingCity', $customer['shippingCity']);
+        $statement->bindValue(':shippingState', $customer['shippingState']);
+        $statement->bindValue(':shippingZipCode', $customer['shippingZipCode']);
+        $statement->bindValue(':cardTypeID', $customer['cardTypeID']);
+        $statement->bindValue(':cardNumber', $customer['cardNumber']);
+        $statement->bindValue(':cardExpMonth', $customer['cardExpMonth']);
+        $statement->bindValue(':cardExpYear', $customer['cardExpYear']);
+
+        $statement->execute();
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        $error_message = $e->getMessage();
+        display_db_error($error_message);
+    }
+}
+
+function update_customer($customer) {
+
+    global $db;
+
+    $query = 'UPDATE customers
+              SET billingStreet = :billingStreet,
+                  billingCity = :billingCity,
+                  billingState = :billingState,
+                  billingZipCode = :billingZipCode,
+                  shippingStreet = :shippingStreet,
+                  shippingCity = :shippingCity,
+                  shippingState = :shippingState,
+                  shippingZipCode = :shippingZipCode,
+                  cardTypeID = :cardTypeID,
+                  cardNumber = :cardNumber,
+                  cardExpMonth = :cardExpMonth,
+                  cardExpYear = :cardExpYear
+              WHERE customerID = :customerID';
+
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':customerID', $customer['customerID']);
+        $statement->bindValue(':billingStreet', $customer['billingStreet']);
+        $statement->bindValue(':billingCity', $customer['billingCity']);
+        $statement->bindValue(':billingState', $customer['billingState']);
+        $statement->bindValue(':billingZipCode', $customer['billingZipCode']);
+        $statement->bindValue(':shippingStreet', $customer['shippingStreet']);
+        $statement->bindValue(':shippingCity', $customer['shippingCity']);
+        $statement->bindValue(':shippingState', $customer['shippingState']);
+        $statement->bindValue(':shippingZipCode', $customer['shippingZipCode']);
+        $statement->bindValue(':cardTypeID', $customer['cardTypeID']);
+        $statement->bindValue(':cardNumber', $customer['cardNumber']);
+        $statement->bindValue(':cardExpMonth', $customer['cardExpMonth']);
+        $statement->bindValue(':cardExpYear', $customer['cardExpYear']);
+
+        $statement->execute();
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        $error_message = $e->getMessage();
+        display_db_error($error_message);
+    }
+}
+
 ?>

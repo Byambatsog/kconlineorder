@@ -279,7 +279,7 @@ function add_order($order, $orderLines) {
 
         // commit the transaction
         $db->commit();
-
+        return $orderID;
     } catch (Exception $e) {
         $error_message = $e->getMessage();
         $db->rollBack();

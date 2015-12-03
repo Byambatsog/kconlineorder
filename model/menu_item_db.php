@@ -72,7 +72,7 @@ function get_items_by_filters($name, $categoryID, $status, $page, $pageSize, $or
         $params[$counter++] = $status;
     }
 
-    $query = 'SELECT itemID, menuitems.name, menucategories.name AS category, description, menuitems.picture,
+    $query = 'SELECT itemID, menuitems.name, menuitems.categoryID, menucategories.name AS category, description, menuitems.picture,
               unitPrice, calories, menuitems.status
               FROM menuitems
               LEFT JOIN menucategories ON menuitems.categoryID=menucategories.categoryID'

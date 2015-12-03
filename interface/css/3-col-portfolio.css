@@ -1,0 +1,239 @@
+/*!
+ * Start Bootstrap - 3 Col Portfolio HTML Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+body {
+    background-image: url('../images/background.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size:cover;
+    padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    font-family: "Avant Garde",Avantgarde,"Century Gothic",CenturyGothic,AppleGothic,sans-serif;
+}
+
+.navbar-brand{
+  font-size: 2em;
+  font-family: Impact,Haettenschweiler,"Franklin Gothic Bold",Charcoal,"Helvetica Inserat","Bitstream Vera Sans Bold","Arial Black","sans serif"
+}
+
+
+@media screen and (min-width: 992px){
+.back{
+  content: "";
+  //background-color:white;
+  width:60%;
+  margin:30px auto;
+ // opacity:0.8;
+ position: relative;
+ //border-radius: 25px;
+}
+
+.back::after{
+  content: "";
+  background-color:white;
+  width:100%;
+  height:100%;
+  opacity:0.8;
+  top:0;
+  left:0;
+  z-index: -1;
+  position: absolute;
+  border-radius: 25px;
+}
+
+.step2{
+  width: 100%;
+}
+}
+
+.row{
+//opacity:0.9;
+//margin-bottom:10px;
+}
+
+.portfolio-item {
+    margin-bottom: 25px;
+   // box-sizing:content-box;
+   //height:120px;
+  
+}
+
+footer {
+    margin: 50px 0;
+}
+
+.tag{
+  margin: 10px auto;
+  text-align: center;
+}
+
+.choice{
+  background-color: white;
+  border-radius: 25px;
+  border: 3px dotted transparent;
+  border: 3px solid #cccccc;
+  box-sizing:border-box;
+  height: 116px;
+   position:relative;
+}
+
+.step3{
+  height: 260px;
+}
+
+
+.choice{
+   //border: 2px hidden #337AB7;
+    //box-sizing:border-box;
+    
+  //width:50%;
+  // display:table-cell; 
+   //vertical-align:middle;
+  }
+
+.choiceOuter{
+  border-radius: 25px;
+  border: 2px dotted transparent;
+  box-sizing:border-box;
+  //height: 120px;
+  position: relative;
+}
+
+.form{
+  display:none;
+  background-color: white;
+  position: absolute;
+   width:100%;
+  height:100%;
+ opacity:0.9;
+  top:0;
+  left:0;
+  z-index: 1;
+  border-radius: 25px;
+}
+
+.form2{
+  //display:none;
+  margin-top: 25px;
+  margin:25px auto;
+  background-color: white;
+  //position: absolute;
+   width:80%;
+  //height:100%;
+ //opacity:0.9;
+  top:0;
+  left:0;
+  z-index: 1;
+  border-radius: 25px;
+}
+
+.form2 form{
+  width:80%;
+  //margin: 25px auto;
+}
+
+.form form{
+  width:90%;
+  margin: 30px auto;
+}
+
+.step4{
+  margin-top: 20px;
+}
+
+
+
+.choice:hover { 
+  background-color: #D7EBFC;
+}
+
+.step3:hover{
+  background-color: white;
+}
+
+.choiceContainer{
+   //width:35%;
+   //margin: 0 auto;
+   //text-align: center;
+   
+
+}
+
+
+.choiceText{
+    //width:100px;
+    //width: 95%;
+  font-size:1.8em;
+  text-align: center;
+  white-space: nowrap ;
+  position:absolute;
+   top:50%; 
+  height:1em; 
+  margin-top:-0.6em;
+  width:100%;
+}
+
+.choiceText.var{
+    //width:100px;
+    //width: 95%;
+  font-size:1em;
+  text-align: center;
+  white-space: nowrap ;
+  position:absolute;
+   top:50%; 
+  height:1em; 
+  margin-top:-0.6em;
+  width:100%;
+}
+.choiceText2{
+  //font-size:1.8em;
+  //width: 95%;
+    //width:100px;
+  text-align: center;
+  //white-space: nowrap ;
+  position:absolute;
+   top:50%; 
+  //height:1em; 
+  margin-top:-1em;
+  width:100%;
+}
+
+
+.hasBorder{
+  border: 3px solid #337AB7;
+}
+
+h3{
+  margin:0;
+}
+
+#placeorder{
+  background-color: #AA3939;
+}
+
+#final{
+  width:80%;
+  margin:auto;
+  padding:10px 0px;
+}
+
+.resultContainer{
+  padding:30px;
+}
+
+.resultItem{
+  margin:10px 0;
+}
+
+.title{
+  font-weight: bold;
+  //color:#337AB7;
+}
+
+table.ordertable {border: 1px solid black; width: 100%;}
+table.ordertable td{padding: 8px; border: 1px solid black;}
+table.ordertable th{padding: 8px; border: 1px solid black;}
+span.has-error {color: #ff0000;}
+.f_req {font-size:13px; color:#ff0000;}
