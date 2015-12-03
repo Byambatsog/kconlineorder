@@ -36,10 +36,16 @@
                         <a href="<?php echo $app_path.'interface/step5.php';?>">Done!</a>
                     </li>
                     <li>
-                        <a href="#">&nbsp;</a>
+                        <?php if(!empty($_SESSION['customer'])) { ?>
+                            <a href="logout.php">Log out</a>
+                        <?php } ?>
                     </li>
                 </ul>
             </div>
+            <div>
+
+            </div>
+
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container -->

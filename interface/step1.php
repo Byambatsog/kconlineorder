@@ -1,4 +1,6 @@
 <?php
+
+    session_start();
     require_once('../util/main.php');
     require_once('header.php');
     require_once('../model/database.php');
@@ -8,7 +10,7 @@
 
     $pickupType = '';
     $locationID = '';
-    session_start();
+
 
     if(!empty($_POST['pickupType'])) {
 

@@ -1,4 +1,6 @@
 <?php
+
+    session_start();
     require_once('../util/main.php');
     require_once('header.php');
     require_once('../model/database.php');
@@ -7,8 +9,6 @@
     require_once('../model/order_db.php');
     require_once('../model/payment_db.php');
 
-
-    session_start();
     if (!isset($_SESSION['order'])) {
         header("Location:step1.php");
     }

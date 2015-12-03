@@ -1,11 +1,12 @@
 <?php
+
+    session_start();
+
     require_once('../util/main.php');
     require_once('header.php');
     require_once('../model/database.php');
     require_once('../model/customer_db.php');
     require_once('../model/user_db.php');
-
-    session_start();
 
     $login_error = '';
     $signup_error = '';
@@ -81,21 +82,21 @@
                     $customer['lastName'] = '';
                     $customer['emailAddress'] = $user['email'];
 
+                    alter_table_customers();
                     $userID = add_customerUser($customer);
-
                     $customer['customerID'] = $userID;
-                    $customer['billingStreet'] = '';
-                    $customer['billingCity'] = '';
-                    $customer['billingState'] = '';
-                    $customer['billingZipCode'] = '';
-                    $customer['shippingStreet'] = '';
-                    $customer['shippingCity'] = '';
-                    $customer['shippingState'] = '';
-                    $customer['shippingZipCode'] = '';
-                    $customer['cardTypeID'] = 1;
-                    $customer['cardNumber'] = '';
-                    $customer['cardExpMonth'] = '';
-                    $customer['cardExpYear'] = '';
+                    $customer['billingStreet'] = null;
+                    $customer['billingCity'] = null;
+                    $customer['billingState'] = null;
+                    $customer['billingZipCode'] = null;
+                    $customer['shippingStreet'] = null;
+                    $customer['shippingCity'] = null;
+                    $customer['shippingState'] = null;
+                    $customer['shippingZipCode'] = null;
+                    $customer['cardTypeID'] = null;
+                    $customer['cardNumber'] = null;
+                    $customer['cardExpMonth'] = null;
+                    $customer['cardExpYear'] = null;
 
                     add_customer($customer);
 

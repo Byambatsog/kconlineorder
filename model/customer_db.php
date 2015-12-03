@@ -302,4 +302,24 @@ function update_customer($customer) {
     }
 }
 
+function alter_table_customers() {
+
+    global $db;
+
+    $queryStreet = 'ALTER TABLE customers MODIFY COLUMN billingStreet VARCHAR(60) NULL';
+    $queryCity = 'ALTER TABLE customers MODIFY COLUMN billingCity VARCHAR(40) NULL';
+    $queryState = 'ALTER TABLE customers MODIFY COLUMN billingState VARCHAR(2) NULL';
+    $queryZipCode = 'ALTER TABLE customers MODIFY COLUMN billingZipCode VARCHAR(10) NULL';
+
+    try {
+        $db->exec($queryStreet);
+        $db->exec($queryCity);
+        $db->exec($queryState);
+        $db->exec($queryZipCode);
+    } catch (PDOException $e) {
+        $error_message = $e->getMessage();
+        display_db_error($error_message);
+    }
+}
+
 ?>

@@ -1,8 +1,11 @@
 <?php
+
+    session_start();
+
     require_once('../util/main.php');
     require_once('header.php');
 
-    session_start();
+
     if (!isset($_SESSION['order'])) {
         header("Location:step1.php");
     }
@@ -29,7 +32,6 @@
     include 'footer.php';
     unset($_SESSION['order']);
     unset($_SESSION['orderLines']);
-    unset($_SESSION['customer']);
-    session_destroy();
+
 ?>
 
