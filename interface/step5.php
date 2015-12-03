@@ -20,7 +20,7 @@
 
     <div class="jumbotron" style="margin-top: 30px;">
         <h1>Thank you for your order!</h1>
-        <p>Your order will be ready for pick up at 07:30pm at our Lakeshore Location.</p>
+        <p>Your order will be ready for pick up in 30 minutes.</p>
         <p><a class="btn btn-primary btn-lg" href="#" role="button">Print Receipt</a></p>
     </div>
 
