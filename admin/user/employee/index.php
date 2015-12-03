@@ -18,7 +18,7 @@
         </div>
         <div class="pull-right">
             <button class="btn btn-default btn-xs" type="button" onclick="sodon_main.create('');">
-                <i class="glyphicon glyphicon-file text-primary"></i> Add New Item
+                <i class="glyphicon glyphicon-file text-primary"></i> Add New Employee
             </button>
         </div>
     </div>

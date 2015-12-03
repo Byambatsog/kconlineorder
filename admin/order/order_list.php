@@ -56,11 +56,11 @@
                     <i class="glyphicon glyphicon-remove"></i> Delete
                 </span>
             </button>
-            <button class="btn btn-default btn-sm" type="button" onclick="sodon_main.create();">
-                <span class="text-success">
-                    <i class="glyphicon glyphicon-info-sign"></i> Create
-                </span>
-            </button>
+<!--            <button class="btn btn-default btn-sm" type="button" onclick="sodon_main.create();">-->
+<!--                <span class="text-success">-->
+<!--                    <i class="glyphicon glyphicon-info-sign"></i> Create-->
+<!--                </span>-->
+<!--            </button>-->
         </div>
         <div class="pull-right">
 
